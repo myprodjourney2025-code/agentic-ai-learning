@@ -1,3 +1,10 @@
-node_modules
 
+node_modules
 .env
+
+# Python (phase-00 onward)
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
