@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { input } from "@inquirer/prompts";
+import { HumanMessage, AIMessage } from "langchain";
 
 config();
 
@@ -27,13 +28,34 @@ const model = new ChatMistralAI({
 //   process.stdout.write(chunk.text);
 // }
 
+// while (true) {
+//   const userPrompt = await input({ message: "You : " });
+
+//   const stream = await model.stream(userPrompt);
+
+//   for await (const chunk of stream) {
+//     process.stdout.write(chunk.text);
+//   }
+//   process.stdout.write("\n");
+// }
+
+const messageHistory = [];
+
 while (true) {
   const userPrompt = await input({ message: "You : " });
 
-  const stream = await model.stream(userPrompt);
+  messageHistory.push(new HumanMessage(userPrompt));
+
+  const stream = await model.stream(messageHistory);
+
+  let aiResponse = "";
 
   for await (const chunk of stream) {
     process.stdout.write(chunk.text);
+    aiResponse += chunk.text;
   }
+
+  messageHistory.push(new AIMessage(aiResponse));
+
   process.stdout.write("\n");
 }
