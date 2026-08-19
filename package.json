@@ -1,0 +1,25 @@
+{
+  "name": "agentic-ai",
+  "version": "1.0.0",
+  "description": "learning agentic ai",
+  "license": "ISC",
+  "author": "Samiran Setua",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@langchain/mistralai": "^1.2.0",
+    "dotenv": "^17.4.2",
+    "langchain": "^1.5.9"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}
