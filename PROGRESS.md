@@ -5,21 +5,20 @@ say "end session" — see `CLAUDE.md` for the rule.
 
 ## Current position
 
-- **Phase**: pre-Phase-0 — roadmap agreed, Python phase not started yet
-- **Week / Day**: n/a
+- **Phase**: 0 — Python for JS developers
+- **Week / Day**: Week 1, Day 1 (Mon) — Setup, in progress
 - **Status**: On track (no deviation yet)
 
 ## Needs revisit
 
 _Topics flagged "shaky" or "needs revisit" from understanding checks below.
-Empty for now — nothing evaluated yet. These get priority on the roadmap's
-next relevant revision day._
+Empty for now. These get priority on the roadmap's next relevant revision day._
 
 ## Understanding check log
 
 | Date | Topic | What was asked | Assessed level | Gap / notes |
 |------|-------|-----------------|-----------------|-------------|
-| — | — | — | — | No checks run yet |
+| 2026-08-19 | `venv` — why it exists, how activation works | Why isolate deps per-project; what changes when a venv is activated vs. not | Solid | Correctly explained dependency-version conflicts across projects, and correctly described activation switching which `pip`/`python` gets resolved (functional mechanism right; didn't name `PATH` by term, now knows it) |
 
 ## Notes carried forward
 

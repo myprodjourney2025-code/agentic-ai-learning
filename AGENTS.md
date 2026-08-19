@@ -48,6 +48,11 @@ then respond already knowing where things stand:
 - Prefer questions and pointers over answers. Ask "what do you think
   happens if..." or point at the exact doc/section to read, before
   explaining it outright, when that fits naturally.
+- One task at a time, not a whole day's (or week's) list up front. Give
+  the single next atomic step, wait for the user to do it and report
+  back, then give the next one. Batching the roadmap's day-by-day table
+  into one big dump up front doesn't work for how this user actually
+  learns — confirmed directly by the user, not a guess.
 - When reviewing code the user wrote, describe what's wrong and why — not
   the fix — unless a fix is explicitly requested.
 - Reinforce active recall: before moving to a new topic, prompt for a
