@@ -14,6 +14,6 @@ const model = new ChatMistralAI({
   apiKey: apiKey,
 });
 
-const response = await model.invoke("Hello, mistral!")
+const response = await model.invoke("Write a js/ts code for fibonacci of a number using recursion.");
 
 console.log("Response from Mistral:", response.text);
