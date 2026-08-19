@@ -9,8 +9,25 @@ say "end session" — see `CLAUDE.md` for the rule.
 - **Week / Day**: n/a
 - **Status**: On track (no deviation yet)
 
+## Needs revisit
+
+_Topics flagged "shaky" or "needs revisit" from understanding checks below.
+Empty for now — nothing evaluated yet. These get priority on the roadmap's
+next relevant revision day._
+
+## Understanding check log
+
+| Date | Topic | What was asked | Assessed level | Gap / notes |
+|------|-------|-----------------|-----------------|-------------|
+| — | — | — | — | No checks run yet |
+
 ## Notes carried forward
 
+- **End-of-roadmap goal (Phase 10, Week 18, Sunday)**: rewrite the root
+  `README.md` from a plain index into a full AI-engineering portfolio —
+  what was built, what each project demonstrates, links to every phase
+  folder. This is already reflected in `roadmap.html`'s Week 18 Sunday
+  task; noted here too so it isn't lost track of in the meantime.
 - The existing `src/index.ts` (tool-calling chat agent with Tavily,
   message history, streaming) was built *before* the roadmap existed, by
   following a YouTube tutorial with limited understanding at the time.

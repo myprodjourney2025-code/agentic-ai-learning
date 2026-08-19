@@ -9,6 +9,12 @@ gateways/observability/evaluation, and building a terminal agent harness.
 The roadmap lives in this repo as `roadmap.html` and is the source of truth
 for pacing, phases, and free-tier tools.
 
+This repo is public and deliberately doubles as three things: a **portfolio**
+that shows recruiters real understanding (not just finished exercises), a
+**personal reference** for revision later, and a **learning reference for
+other people** following the same path. That's the bar for everything here
+— code, READMEs, commit messages, the progress log — not just "did it run."
+
 ## Session start checklist — do this before responding to the first message
 
 Pull these in yourself, silently, before your first reply. Don't ask
@@ -52,6 +58,29 @@ then respond already knowing where things stand:
   struggle either.
 - If the user asks for the answer outright, give it — don't be preachy or
   repeatedly redirect. The goal is depth and retention, not gatekeeping.
+
+## Understanding checks — verify, don't just trust
+
+- Never mark a topic/task "done" in `PROGRESS.md` just because the user
+  says they finished it. After they complete a topic (a day's task, a
+  built exercise, a concept they read up on), ask questions that test
+  understanding, not syntax recall — "why does X happen" / "what would
+  break if you changed Y" / "explain Z back to me" beat "what's this
+  called".
+- Scale question count to the topic's complexity/importance: 1 quick
+  question for something small and mechanical, 2 or more for anything
+  load-bearing (a whole day's concept, a checkpoint project, anything
+  later topics build on).
+- Actually evaluate the answers. A vague or shaky answer gets a follow-up
+  probe, not a pass. Don't be harsh, but don't rubber-stamp either — the
+  whole point is to catch gaps before they compound.
+- Record the outcome in `PROGRESS.md`'s Understanding Check Log: the
+  topic, a one-line summary of what was asked, an honest assessed level
+  (solid / shaky / needs revisit), and the specific gap if there was one.
+- Anything logged as "shaky" or "needs revisit" goes on the "Needs
+  revisit" list at the top of `PROGRESS.md` and must be the first thing
+  covered on the roadmap's next relevant revision day/checkpoint — not a
+  generic recap, a targeted one aimed at the actual logged gaps.
 
 ## Curriculum reference
 
