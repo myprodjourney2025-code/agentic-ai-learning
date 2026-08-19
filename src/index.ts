@@ -14,6 +14,14 @@ const model = new ChatMistralAI({
   apiKey: apiKey,
 });
 
-const response = await model.invoke("Write a js/ts code for fibonacci of a number using recursion.");
+// const response = await model.invoke("Write a js/ts code for fibonacci of a number using recursion.");
 
-console.log("Response from Mistral:", response.text);
+// console.log("Response from Mistral:", response.text);
+
+const response = await model.stream(
+  "Write a js/ts code for fibonacci of a number using recursion.",
+);
+
+for await (const chunk of response) {
+  process.stdout.write(chunk.text);
+}
