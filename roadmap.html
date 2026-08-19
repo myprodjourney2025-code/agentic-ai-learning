@@ -330,7 +330,7 @@
       <tr>
         <td class="num">5</td>
         <td class="wk">Wk 10</td>
-        <td><a href="#phase-5">AI gateways, observability, cost</a><span class="goal">The production plumbing around raw API calls: routing, tracing, caching, budgets.</span></td>
+        <td><a href="#phase-5">AI gateways, observability &amp; evaluation</a><span class="goal">The production plumbing around raw API calls: routing, tracing, caching, budgets, and measuring quality with real eval tools.</span></td>
       </tr>
       <tr>
         <td class="num">6</td>
@@ -376,7 +376,11 @@
         <tr><td class="name">Chroma</td><td class="free">unlimited, self-hosted</td><td>Local vector DB while learning RAG</td></tr>
         <tr><td class="name">Qdrant Cloud</td><td class="free">1 GB forever</td><td>Cloud vector DB once you outgrow local</td></tr>
         <tr><td class="name">Langfuse</td><td class="free">10K events/mo</td><td>Tracing &amp; observability for LLM calls</td></tr>
+        <tr><td class="name">LangSmith</td><td class="free">5K traces/mo</td><td>LangChain-native tracing alternative to Langfuse</td></tr>
         <tr><td class="name">LiteLLM</td><td class="free">unlimited, self-hosted</td><td>One gateway across every provider above</td></tr>
+        <tr><td class="name">Promptfoo</td><td class="free">free, open-source</td><td>Automated prompt/model testing &amp; comparison</td></tr>
+        <tr><td class="name">DeepEval</td><td class="free">free, open-source</td><td>Pytest-style LLM output testing, CI-friendly</td></tr>
+        <tr><td class="name">Ragas</td><td class="free">free, open-source</td><td>RAG-specific quality metrics (faithfulness, relevancy)</td></tr>
       </table>
     </div>
   </section>
@@ -625,7 +629,7 @@
           <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
           <tr><td class="day">Mon</td><td class="focus">Guided course</td><td>Work through an advanced-RAG-retrieval course module hands-on.</td></tr>
           <tr><td class="day">Tue</td><td class="focus">Failure modes</td><td>Read about irrelevant chunks, lost-in-the-middle, and hallucinated citations.</td></tr>
-          <tr><td class="day">Wed</td><td class="focus">Evaluate</td><td>Write a small set of Q&amp;A test pairs and manually score your bot's accuracy. For a couple of them, also ask Claude (Anthropic) to judge the answer's quality — your first taste of LLM-as-judge, and a second provider's opinion on the same output.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Evaluate</td><td>Write a small set of Q&amp;A test pairs and manually score your bot's accuracy. For a couple of them, also ask Claude (Anthropic) to judge the answer's quality — your first taste of LLM-as-judge, and a second provider's opinion on the same output. You'll swap this manual scoring for real eval frameworks in Phase 5.</td></tr>
           <tr><td class="day">Thu</td><td class="focus">Agentic RAG</td><td>Let the agent decide when to search vs. answer directly — ties Phase 2's tool calling into RAG.</td></tr>
           <tr><td class="day">Fri</td><td class="focus">Polish</td><td>Improve whatever your Wednesday eval exposed as weak.</td></tr>
           <tr><td class="day">Sat</td><td class="focus">Buffer</td><td>Catch-up day — nothing new, just close gaps from the last three weeks.</td></tr>
@@ -650,33 +654,37 @@
   <article class="phase" id="phase-5">
     <div class="phase-head">
       <span class="phase-num">05</span>
-      <h2>AI gateways, observability &amp; cost control</h2>
+      <h2>AI gateways, observability &amp; evaluation</h2>
     </div>
     <div class="phase-badges"><span class="pill">Week 10</span><span class="pill">7 days</span><span class="pill provider-badge">Providers: all of them, on purpose — that's the point of a gateway</span></div>
-    <p class="phase-why">The production plumbing that sits around raw API calls in any real deployment: one interface across providers, visibility into what's actually happening, and a lid on spend.</p>
+    <p class="phase-why">The production plumbing around raw API calls: one interface across providers, visibility into what's actually happening, and — the part it's easy to skip as a solo learner — a repeatable way to measure whether a change made your agent better or worse, instead of eyeballing a couple of outputs and guessing.</p>
 
     <details class="week" open>
-      <summary>Week 10 — gateway, tracing, caching <span class="arrow">›</span></summary>
+      <summary>Week 10 — gateway, tracing, eval &amp; performance <span class="arrow">›</span></summary>
       <div class="week-body">
         <table class="days">
           <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
-          <tr><td class="day">Mon</td><td class="focus">What's a gateway</td><td>Read why teams put a proxy in front of LLM providers — single interface, budgets, fallback routing.</td></tr>
-          <tr><td class="day">Tue</td><td class="focus">LiteLLM</td><td>Self-host the LiteLLM proxy locally; route one request through it to Cerebras and Groq, and compare raw response speed — this is where the free-tier throughput numbers you've read about become visible first-hand.</td></tr>
-          <tr><td class="day">Wed</td><td class="focus">Observability</td><td>Set up Langfuse's free Hobby tier; pipe your Phase 4 RAG bot's calls through it.</td></tr>
-          <tr><td class="day">Thu</td><td class="focus">Caching</td><td>Read about prompt caching and semantic caching, and why they cut cost meaningfully.</td></tr>
-          <tr><td class="day">Fri</td><td class="focus">Alternative</td><td>Read OpenRouter's docs as an all-in-one alternative; compare the three approaches you've now seen.</td></tr>
-          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Wire basic cost/token logging into your existing RAG bot.</td></tr>
-          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain the difference between a gateway and an observability tool, from memory — they're not the same thing.</td></tr>
+          <tr><td class="day">Mon</td><td class="focus">What's a gateway</td><td>Read why teams put a proxy in front of LLM providers — single interface, budgets, fallback routing. Skim OpenRouter's docs too, as the hosted alternative to self-hosting one.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">LiteLLM</td><td>Self-host the LiteLLM proxy locally; route one request through it to Cerebras and Groq, and compare raw response speed — this is where the free-tier throughput numbers you've read about become visible first-hand. Turn on its built-in response caching and re-run the same prompt to see the latency/cost drop.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Observability</td><td>Set up Langfuse's free Hobby tier (or LangSmith's free 5K-traces/month plan — it's LangChain-native, worth knowing since you've used LangChain already); pipe your Phase 4 RAG bot's calls through it and look at real latency/token numbers per call, not estimates.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Eval frameworks</td><td>Install Promptfoo or DeepEval. Write a small, pytest-style test suite that checks your agent's tool-calls and RAG answers automatically — this replaces the manual scoring from Phase 4 Week 9 with something you can re-run.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">RAG-specific metrics</td><td>Run Ragas against your Phase 4 bot's test set: faithfulness, answer relevancy, context precision — purpose-built metrics for exactly the failure modes you read about in Week 9.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Wire Thursday/Friday's evals plus basic cost/token logging into one script you can re-run after every change — a mini regression check for your own project.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain, from memory, the difference between a gateway, an observability tool, and an eval framework — three different jobs, easy to conflate, and now you've used all three.</td></tr>
         </table>
         <div class="resources">
           <h5>Resources</h5>
           <ul>
             <li><a href="https://docs.litellm.ai/" target="_blank" rel="noopener">LiteLLM Docs</a></li>
             <li><a href="https://langfuse.com/docs" target="_blank" rel="noopener">Langfuse Docs</a></li>
+            <li><a href="https://docs.smith.langchain.com/" target="_blank" rel="noopener">LangSmith Docs</a></li>
             <li><a href="https://openrouter.ai/docs" target="_blank" rel="noopener">OpenRouter Docs</a></li>
+            <li><a href="https://www.promptfoo.dev/docs/getting-started/" target="_blank" rel="noopener">Promptfoo — Getting Started</a></li>
+            <li><a href="https://deepeval.com/docs/introduction" target="_blank" rel="noopener">DeepEval Docs</a></li>
+            <li><a href="https://docs.ragas.io/en/stable/getstarted/" target="_blank" rel="noopener">Ragas — Get Started</a></li>
           </ul>
         </div>
-        <div class="tool-badges"><span>LiteLLM (self-hosted, free)</span><span>Langfuse free tier</span></div>
+        <div class="tool-badges"><span>LiteLLM (self-hosted, free)</span><span>Langfuse / LangSmith free tier</span><span>Promptfoo / DeepEval / Ragas (free, OSS)</span></div>
       </div>
     </details>
   </article>
