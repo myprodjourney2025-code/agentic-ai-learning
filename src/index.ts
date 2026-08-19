@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { input } from "@inquirer/prompts";
 
 config();
 
@@ -18,10 +19,21 @@ const model = new ChatMistralAI({
 
 // console.log("Response from Mistral:", response.text);
 
-const response = await model.stream(
-  "Write a js/ts code for fibonacci of a number using recursion.",
-);
+// const response = await model.stream(
+//   "Write a js/ts code for fibonacci of a number using recursion.",
+// );
 
-for await (const chunk of response) {
-  process.stdout.write(chunk.text);
+// for await (const chunk of response) {
+//   process.stdout.write(chunk.text);
+// }
+
+while (true) {
+  const userPrompt = await input({ message: "You : " });
+
+  const stream = await model.stream(userPrompt);
+
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.text);
+  }
+  process.stdout.write("\n");
 }
