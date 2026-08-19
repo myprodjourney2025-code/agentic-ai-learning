@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { input } from "@inquirer/prompts";
-import { HumanMessage, AIMessage } from "langchain";
+import { HumanMessage, AIMessage, SystemMessage } from "langchain";
 
 config();
 
@@ -39,7 +39,11 @@ const model = new ChatMistralAI({
 //   process.stdout.write("\n");
 // }
 
-const messageHistory = [];
+const messageHistory: any = [
+  new SystemMessage(
+    "Hey, Your name is VERONICA. You are a helpful assistant. You are a large language model trained by Mistral AI. You will answer my questions and help me in my day to day life works. You will answer in a friendly and helpful manner.",
+  ),
+];
 
 while (true) {
   const userPrompt = await input({ message: "You : " });
