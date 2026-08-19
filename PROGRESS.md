@@ -6,7 +6,7 @@ say "end session" — see `CLAUDE.md` for the rule.
 ## Current position
 
 - **Phase**: 0 — Python for JS developers
-- **Week / Day**: Week 1, Day 1 (Mon) — Setup, in progress
+- **Week / Day**: Week 1, Day 1 (Mon) — Setup complete, moving to Day 2
 - **Status**: On track (no deviation yet)
 
 ## Needs revisit
@@ -19,6 +19,7 @@ Empty for now. These get priority on the roadmap's next relevant revision day._
 | Date | Topic | What was asked | Assessed level | Gap / notes |
 |------|-------|-----------------|-----------------|-------------|
 | 2026-08-19 | `venv` — why it exists, how activation works | Why isolate deps per-project; what changes when a venv is activated vs. not | Solid | Correctly explained dependency-version conflicts across projects, and correctly described activation switching which `pip`/`python` gets resolved (functional mechanism right; didn't name `PATH` by term, now knows it) |
+| 2026-08-19 | Variables/types — Python vs. JS type coercion | What happens on `int + str` vs. JS's implicit coercion | Solid | Correctly identified no coercion, and on follow-up correctly named it as a `TypeError` crash rather than silent failure |
 
 ## Notes carried forward
 
