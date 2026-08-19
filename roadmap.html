@@ -1,0 +1,905 @@
+<title>Agent Builder's Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3F0;
+    --surface:#E7EBE7;
+    --surface-2:#DCE2DC;
+    --ink:#16232A;
+    --ink-soft:#46524F;
+    --line:#C6D0C7;
+    --accent:#2E6B5E;
+    --accent-ink:#F4F7F4;
+    --accent2:#B4602A;
+    --accent2-soft:#E9D9C6;
+    --good:#2E6B5E;
+    --warn:#B4602A;
+    --shadow: 0 1px 0 rgba(22,35,42,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#10181A;
+      --surface:#172321;
+      --surface-2:#1D2B28;
+      --ink:#E7EDE9;
+      --ink-soft:#AAB8B2;
+      --line:#2B3936;
+      --accent:#63A995;
+      --accent-ink:#0D1817;
+      --accent2:#E2914F;
+      --accent2-soft:#3A2C1E;
+      --good:#63A995;
+      --warn:#E2914F;
+      --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#10181A;
+    --surface:#172321;
+    --surface-2:#1D2B28;
+    --ink:#E7EDE9;
+    --ink-soft:#AAB8B2;
+    --line:#2B3936;
+    --accent:#63A995;
+    --accent-ink:#0D1817;
+    --accent2:#E2914F;
+    --accent2-soft:#3A2C1E;
+    --good:#63A995;
+    --warn:#E2914F;
+    --shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Public Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  a{ color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px; }
+  a:focus-visible, summary:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent2);
+    outline-offset:2px;
+  }
+  h1,h2,h3{
+    font-family:"Newsreader", Georgia, "Times New Roman", serif;
+    font-weight:600;
+    text-wrap:balance;
+    line-height:1.15;
+    margin:0;
+    color:var(--ink);
+  }
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.72rem;
+    letter-spacing:0.11em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .wrap{ max-width:880px; margin:0 auto; padding:0 24px 96px; }
+
+  /* nav */
+  nav.jump{
+    position:sticky; top:0; z-index:20;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+  nav.jump .inner{
+    max-width:880px; margin:0 auto; padding:10px 24px;
+    display:flex; gap:18px; white-space:nowrap;
+  }
+  nav.jump a{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  nav.jump a:hover{ color:var(--accent); }
+
+  /* hero */
+  header.hero{ padding:56px 0 28px; }
+  header.hero h1{ font-size:clamp(2rem, 4.4vw, 2.9rem); margin-top:10px; }
+  header.hero p.sub{ max-width:60ch; color:var(--ink-soft); font-size:1.05rem; margin-top:14px; }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+  .pill{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.75rem;
+    letter-spacing:0.03em;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    padding:5px 11px;
+    border-radius:3px;
+  }
+
+  /* callouts */
+  .callout{
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    background:var(--surface);
+    padding:18px 20px;
+    border-radius:2px;
+    margin:20px 0;
+  }
+  .callout.warm{ border-left-color:var(--accent2); }
+  .callout h3{ font-size:1rem; margin-bottom:8px; }
+  .callout p{ margin:0; color:var(--ink-soft); }
+  .callout p + p{ margin-top:8px; }
+
+  section.block{ margin-top:64px; }
+  section.block > .eyebrow{ display:block; margin-bottom:8px; }
+  section.block > h2{ font-size:1.6rem; margin-bottom:14px; }
+  section.block > p.lead{ color:var(--ink-soft); max-width:66ch; margin-bottom:22px; }
+
+  /* toc */
+  table.toc{ width:100%; border-collapse:collapse; }
+  table.toc td{ padding:11px 8px; border-bottom:1px solid var(--line); vertical-align:top; font-size:0.94rem;}
+  table.toc td.num{ font-family:"IBM Plex Mono", monospace; color:var(--accent); width:2.4em; font-variant-numeric:tabular-nums;}
+  table.toc td.wk{ font-family:"IBM Plex Mono", monospace; color:var(--ink-soft); white-space:nowrap; width:6em; font-variant-numeric:tabular-nums;}
+  table.toc a{ color:var(--ink); text-decoration:none; font-weight:600; }
+  table.toc a:hover{ color:var(--accent); }
+  table.toc .goal{ color:var(--ink-soft); display:block; font-size:0.88rem; margin-top:2px; }
+
+  /* cheatsheet */
+  .tablewrap{ overflow-x:auto; border:1px solid var(--line); border-radius:3px; }
+  table.sheet{ width:100%; border-collapse:collapse; min-width:640px; background:var(--surface); }
+  table.sheet th{
+    text-align:left; font-family:"IBM Plex Mono", monospace; font-size:0.72rem;
+    letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);
+    padding:10px 14px; border-bottom:1px solid var(--line); background:var(--surface-2);
+  }
+  table.sheet td{ padding:11px 14px; border-bottom:1px solid var(--line); font-size:0.92rem; vertical-align:top; }
+  table.sheet tr:last-child td{ border-bottom:none; }
+  table.sheet td.name{ font-weight:600; white-space:nowrap; }
+  table.sheet td.free{ color:var(--accent); font-family:"IBM Plex Mono", monospace; font-size:0.85rem; white-space:nowrap; }
+
+  /* projects */
+  .projects{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:14px; }
+  .proj{ border:1px solid var(--line); background:var(--surface); border-radius:3px; padding:18px; display:flex; flex-direction:column; gap:8px; }
+  .proj .tag{ font-family:"IBM Plex Mono", monospace; font-size:0.7rem; color:var(--accent2); letter-spacing:0.04em; }
+  .proj h4{ font-family:"Newsreader", serif; font-size:1.15rem; font-weight:600; margin:0; }
+  .proj p{ color:var(--ink-soft); font-size:0.9rem; margin:0; }
+
+  /* phases */
+  article.phase{
+    margin-top:52px;
+    border-top:1px solid var(--line);
+    padding-top:28px;
+  }
+  .phase-head{ display:flex; gap:18px; align-items:baseline; flex-wrap:wrap; }
+  .phase-num{ font-family:"IBM Plex Mono", monospace; font-size:1.9rem; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .phase-head h2{ font-size:1.5rem; }
+  .phase-badges{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+  .checkpoint-badge{ background:var(--accent2-soft); color:var(--accent2); border-color:transparent; }
+  .provider-badge{ border-color:var(--accent); color:var(--accent); }
+  .phase-why{ color:var(--ink-soft); max-width:68ch; margin-top:14px; }
+
+  details.week{
+    margin-top:16px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--surface);
+  }
+  details.week summary{
+    cursor:pointer;
+    list-style:none;
+    padding:13px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-weight:600;
+  }
+  details.week summary::-webkit-details-marker{ display:none; }
+  details.week summary .arrow{
+    font-family:"IBM Plex Mono", monospace;
+    color:var(--ink-soft);
+    transition:transform 0.15s ease;
+  }
+  details.week[open] summary .arrow{ transform:rotate(90deg); }
+  @media (prefers-reduced-motion: reduce){
+    details.week summary .arrow{ transition:none; }
+  }
+  details.week .week-body{ padding:0 16px 16px; }
+
+  table.days{ width:100%; border-collapse:collapse; }
+  table.days th{
+    text-align:left; font-family:"IBM Plex Mono", monospace; font-size:0.68rem;
+    letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);
+    padding:8px 6px; border-bottom:1px solid var(--line);
+  }
+  table.days td{ padding:9px 6px; border-bottom:1px solid var(--line); font-size:0.9rem; vertical-align:top; }
+  table.days tr:last-child td{ border-bottom:none; }
+  table.days td.day{ font-family:"IBM Plex Mono", monospace; color:var(--ink-soft); white-space:nowrap; width:4.2em; font-variant-numeric:tabular-nums; }
+  table.days td.focus{ font-weight:600; white-space:nowrap; }
+  table.days tr.recap td{ color:var(--ink-soft); font-style:italic; }
+  table.days tr.recap td.focus{ color:var(--accent2); font-style:normal; }
+
+  ul.todo{ list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  ul.todo li{ display:flex; align-items:baseline; gap:9px; font-size:0.92rem; }
+  ul.todo input[type="checkbox"]{ accent-color:var(--accent); width:15px; height:15px; flex:none; margin-top:2px; }
+
+  .resources{ margin-top:16px; }
+  .resources h5{
+    font-family:"IBM Plex Mono", monospace; font-size:0.7rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0 0 8px;
+  }
+  .resources ul{ margin:0; padding-left:18px; }
+  .resources li{ font-size:0.88rem; margin-bottom:4px; }
+
+  .tool-badges{ display:flex; gap:6px; flex-wrap:wrap; margin-top:14px; }
+  .tool-badges span{
+    font-family:"IBM Plex Mono", monospace; font-size:0.7rem; color:var(--ink-soft);
+    border:1px solid var(--line); padding:3px 8px; border-radius:3px;
+  }
+
+  footer{
+    margin-top:80px; padding-top:24px; border-top:1px solid var(--line);
+    color:var(--ink-soft); font-size:0.86rem;
+  }
+</style>
+
+<nav class="jump">
+  <div class="inner">
+    <a href="#howto">How to use this</a>
+    <a href="#freetier">Free-tier map</a>
+    <a href="#projects">Portfolio projects</a>
+    <a href="#phase-0">0 Python</a>
+    <a href="#phase-1">1 LLM basics</a>
+    <a href="#phase-2">2 Tool calling</a>
+    <a href="#phase-4">4 RAG</a>
+    <a href="#phase-5">5 Gateways</a>
+    <a href="#phase-7">7 Multi-agent</a>
+    <a href="#phase-8">8 Fine-tuning</a>
+    <a href="#phase-9">9 Agent harness</a>
+    <a href="#phase-10">10 Capstone</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">A learning route, not a syllabus to skim</span>
+    <h1>Agent Builder's Field Manual</h1>
+    <p class="sub">Eighteen weeks from "copy-pasted a YouTube tutorial" to "can build a RAG pipeline, a multi-agent system, and a terminal agent harness from scratch" — in TypeScript where you're already strong, and in Python where the ecosystem is stronger. Model-and-API only: no training models from scratch.</p>
+    <div class="meta-row">
+      <span class="pill">18 weeks</span>
+      <span class="pill">1–2 hrs / day</span>
+      <span class="pill">~$0–5 total cost</span>
+      <span class="pill">4 portfolio projects</span>
+      <span class="pill">weekly + phase revision built in</span>
+    </div>
+  </header>
+
+  <div class="callout" id="howto">
+    <h3>My role in this: observer &amp; mentor, not a co-author</h3>
+    <p>I'll explain concepts, point at exactly what to read or change next, answer "why," and review what you build — but I won't write or edit your code. If you want me to make an actual change, ask for it explicitly and specifically; a general "help me with this" stays guidance-only. That's the same rule your project's <span class="mono">CLAUDE.md</span> already holds you to, extended to this whole roadmap.</p>
+  </div>
+
+  <div class="callout warm">
+    <h3>How to move through this fast <em>and</em> deep</h3>
+    <p><strong>Build before you finish reading.</strong> Skim a doc, try to write the thing, come back to the doc when you're actually stuck — not before. That's the opposite of what got you here (a full copy-paste with no mental model), and it's the fastest way to actually own the material.</p>
+    <p><strong>Explain it back in your own words.</strong> Every week ends in a short recap day — write, out loud or in a notes file, what you learned without looking anything up. If you can't, that's the thing to revisit, not the next topic.</p>
+    <p><strong>Rebuild small things from memory a few days later.</strong> Several tasks below explicitly ask you to redo something you already built, blank file, no peeking. That's where retention actually comes from.</p>
+    <p><strong>20-minute rule.</strong> Stuck on an error? Wrestle with it for ~20 minutes first. Past that, read the docs or ask — don't burn an hour, and don't skip the wrestling either.</p>
+  </div>
+
+  <div class="callout">
+    <h3>The provider rotates on purpose</h3>
+    <p>Each phase below names a specific provider to build against — Gemini here, Groq there, OpenAI, Anthropic, Mistral, OpenRouter elsewhere. That's deliberate, not arbitrary: every provider's SDK has slightly different message shapes, tool-call formats, and quirks, and the fastest way to learn "the concept of tool calling" instead of "how OpenAI does tool calling" is to hit those differences yourself. By the time you reach Phase 9, swapping the model behind your agent harness should feel like a config change, not a rewrite — because you'll have done it, for real, half a dozen times already.</p>
+  </div>
+
+  <section class="block">
+    <span class="eyebrow">The route</span>
+    <h2>Eleven phases, eighteen weeks</h2>
+    <p class="lead">Two phases (3 and 6) and the final week are full revision-and-build checkpoints — cumulative review plus a portfolio project, so nothing you learned in week 2 is forgotten by week 15.</p>
+    <table class="toc">
+      <tr>
+        <td class="num">0</td>
+        <td class="wk">Wk 1–2</td>
+        <td><a href="#phase-0">Python for JS developers</a><span class="goal">Get functionally fluent in Python syntax and tooling before the AI ecosystem leans on it.</span></td>
+      </tr>
+      <tr>
+        <td class="num">1</td>
+        <td class="wk">Wk 3</td>
+        <td><a href="#phase-1">LLM fundamentals &amp; prompting</a><span class="goal">Tokens, context windows, message roles, and Anthropic's core agent patterns — before writing more agent code.</span></td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="wk">Wk 4–5</td>
+        <td><a href="#phase-2">API integration &amp; tool calling</a><span class="goal">Give a model tools it can call — the mechanical core of every agent, framework-free first.</span></td>
+      </tr>
+      <tr>
+        <td class="num">3</td>
+        <td class="wk">Wk 6</td>
+        <td><a href="#phase-3">Checkpoint — revision + Project 1</a><span class="goal">Cumulative review, then ship the Terminal Research Assistant.</span></td>
+      </tr>
+      <tr>
+        <td class="num">4</td>
+        <td class="wk">Wk 7–9</td>
+        <td><a href="#phase-4">RAG &amp; vector databases</a><span class="goal">Teach a model to answer from your own documents instead of just its training data.</span></td>
+      </tr>
+      <tr>
+        <td class="num">5</td>
+        <td class="wk">Wk 10</td>
+        <td><a href="#phase-5">AI gateways, observability, cost</a><span class="goal">The production plumbing around raw API calls: routing, tracing, caching, budgets.</span></td>
+      </tr>
+      <tr>
+        <td class="num">6</td>
+        <td class="wk">Wk 11</td>
+        <td><a href="#phase-6">Checkpoint — revision + Project 2</a><span class="goal">Cumulative review, then ship the Docs Q&amp;A Bot with observability wired in.</span></td>
+      </tr>
+      <tr>
+        <td class="num">7</td>
+        <td class="wk">Wk 12–14</td>
+        <td><a href="#phase-7">Multi-agent systems</a><span class="goal">LangGraph and CrewAI — move from one agent with tools to several coordinating agents.</span></td>
+      </tr>
+      <tr>
+        <td class="num">8</td>
+        <td class="wk">Wk 15</td>
+        <td><a href="#phase-8">Fine-tuning via APIs</a><span class="goal">When fine-tuning beats prompting/RAG, and how to do it hosted — no training infra.</span></td>
+      </tr>
+      <tr>
+        <td class="num">9</td>
+        <td class="wk">Wk 16–17</td>
+        <td><a href="#phase-9">Build your own agent harness</a><span class="goal">A minimal Claude-Code-like terminal agent, framework-free — the capstone skill.</span></td>
+      </tr>
+      <tr>
+        <td class="num">10</td>
+        <td class="wk">Wk 18</td>
+        <td><a href="#phase-10">Capstone, portfolio &amp; final revision</a><span class="goal">Full-course review, then turn the harness into one demo-able product.</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="block" id="freetier">
+    <span class="eyebrow">Reference</span>
+    <h2>The free-tier map</h2>
+    <p class="lead">Keep the whole route at $0–5 by spreading load across these. Brave Search is deliberately left off this list — as you found, it now requires a card on file even for its free credits, unlike everything below.</p>
+    <div class="tablewrap">
+      <table class="sheet">
+        <tr><th>Tool</th><th>Free tier</th><th>Best for</th></tr>
+        <tr><td class="name">Google AI Studio (Gemini)</td><td class="free">no card required</td><td>General-purpose calls, huge context window, multimodal</td></tr>
+        <tr><td class="name">Groq</td><td class="free">no card, ~30 req/min</td><td>Very fast inference for testing agent loops</td></tr>
+        <tr><td class="name">Mistral La Plateforme</td><td class="free">~1B tokens/mo*</td><td>High-volume practice, embeddings (*opt-in to data training)</td></tr>
+        <tr><td class="name">Cerebras Cloud</td><td class="free">1M tokens/day</td><td>Fastest raw throughput available free</td></tr>
+        <tr><td class="name">OpenRouter</td><td class="free">~30 free models</td><td>Trying many models behind one API</td></tr>
+        <tr><td class="name">Tavily</td><td class="free">1,000 credits/mo, no card</td><td>Search tool for agents (already set up)</td></tr>
+        <tr><td class="name">Chroma</td><td class="free">unlimited, self-hosted</td><td>Local vector DB while learning RAG</td></tr>
+        <tr><td class="name">Qdrant Cloud</td><td class="free">1 GB forever</td><td>Cloud vector DB once you outgrow local</td></tr>
+        <tr><td class="name">Langfuse</td><td class="free">10K events/mo</td><td>Tracing &amp; observability for LLM calls</td></tr>
+        <tr><td class="name">LiteLLM</td><td class="free">unlimited, self-hosted</td><td>One gateway across every provider above</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="block" id="projects">
+    <span class="eyebrow">What you'll have to show for it</span>
+    <h2>Four portfolio projects</h2>
+    <p class="lead">Each one lands at a checkpoint, builds directly on the phase before it, and is scoped to be a real GitHub repo with a README — resume bullets, not exercises.</p>
+    <div class="projects">
+      <div class="proj">
+        <span class="tag">WEEK 6 · PHASE 3</span>
+        <h4>Terminal Research Assistant</h4>
+        <p>A CLI agent with tool-calling, live search (Tavily), and conversation memory — the framework-free evolution of what you already built in this repo.</p>
+      </div>
+      <div class="proj">
+        <span class="tag">WEEK 11 · PHASE 6</span>
+        <h4>Docs Q&amp;A Bot</h4>
+        <p>RAG over your own document set, cited answers, routed through a self-hosted gateway with full request tracing.</p>
+      </div>
+      <div class="proj">
+        <span class="tag">WEEK 14 · PHASE 7</span>
+        <h4>Multi-Agent Content Pipeline</h4>
+        <p>A researcher → writer → editor pipeline built once in CrewAI and once in LangGraph, so you can speak to the tradeoff first-hand.</p>
+      </div>
+      <div class="proj">
+        <span class="tag">WEEKS 16–18 · PHASE 9–10</span>
+        <h4>Mini Claude Code</h4>
+        <p>Your own minimal terminal coding agent — read/write files, run shell commands behind a confirmation step, streaming output. The capstone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 0 -->
+  <article class="phase" id="phase-0">
+    <div class="phase-head">
+      <span class="phase-num">00</span>
+      <h2>Python for JS developers</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Weeks 1–2</span><span class="pill">12 days</span></div>
+    <p class="phase-why">Most AI tutorials, SDKs, and fine-tuning tooling live in Python first. You already think in types, functions, and async — this phase is mostly translation, not new concepts, so it should move quickly.</p>
+
+    <details class="week" open>
+      <summary>Week 1 — syntax, control flow, data structures <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Setup</td><td>Install Python, learn <span class="mono">venv</span> + <span class="mono">pip</span>, run a script. Variables, types, f-strings — map each to its JS equivalent as you go.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Control flow</td><td>if/for/while, functions, default args, <span class="mono">*args</span>/<span class="mono">**kwargs</span> vs. JS rest/spread.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Data structures</td><td>list/dict/tuple/set vs. array/object/Map/Set. Note what Python has that JS doesn't (tuples, sets as first-class).</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Comprehensions</td><td>List/dict comprehensions — Python's signature idiom, no real JS equivalent. Also: string methods.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">I/O</td><td>File I/O, the <span class="mono">json</span> module vs. <span class="mono">JSON.parse/stringify</span>, loading <span class="mono">.env</span> with <span class="mono">python-dotenv</span>.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Errors &amp; classes</td><td>try/except vs. try/catch. Classes/OOP basics vs. JS classes.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Build a tiny CLI to-do list that saves to a JSON file, using everything from this week. No new concepts today.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 2 — tooling, async, typing <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Environments</td><td><span class="mono">venv</span> and <span class="mono">requirements.txt</span> vs. <span class="mono">package.json</span>, in depth. Project layout conventions.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Async</td><td><span class="mono">asyncio</span>, async/await — should feel familiar coming from JS promises. Spot the differences (event loop is explicit).</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">HTTP</td><td>The <span class="mono">requests</span> / <span class="mono">httpx</span> libraries — Python's fetch/axios.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Typing</td><td>Type hints vs. TypeScript types — this should transfer almost directly.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">AI SDKs</td><td>Install the OpenAI, Anthropic, and Mistral Python SDKs. Skim their quickstarts — don't build yet, just get oriented.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Port an exercise</td><td>Take one small piece of logic from your existing <span class="mono">agentic-ai</span> TS project and rewrite it in Python.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Phase recap</td><td>Self-test: list five JS→Python differences that tripped you up, from memory, before checking notes.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noopener">The Official Python Tutorial</a> — the canonical reference, use as ground truth</li>
+            <li><a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener">CS50's Introduction to Programming with Python</a> (Harvard, free) — best structured course if you want lectures</li>
+            <li><a href="https://automatetheboringstuff.com/" target="_blank" rel="noopener">Automate the Boring Stuff with Python</a> (free online book) — practical, project-driven</li>
+            <li><a href="https://realpython.com/" target="_blank" rel="noopener">Real Python</a> — reference articles for anything that needs a deeper dive</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 1 -->
+  <article class="phase" id="phase-1">
+    <div class="phase-head">
+      <span class="phase-num">01</span>
+      <h2>LLM fundamentals &amp; prompt engineering</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Week 3</span><span class="pill">7 days</span><span class="pill provider-badge">Provider: Google Gemini (AI Studio)</span></div>
+    <p class="phase-why">Before writing more agent code, understand what you're actually calling. Tokens, context windows, and message roles explain almost every weird behavior you'll debug later.</p>
+
+    <details class="week" open>
+      <summary>Week 3 — how models actually work <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Tokens &amp; context</td><td>Read one provider's "concepts" page on tokens, context windows, inference. No code — just notes in your own words.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Message roles</td><td>Compare system/user/assistant message shapes across OpenAI, Anthropic, and Mistral side by side.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Prompt engineering</td><td>Clarity, few-shot examples, role-setting. Work through a short prompt-engineering course hands-on.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Structured output</td><td>Ask a model for JSON directly and see it fail in small ways — sets up why tool calling exists (next phase).</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Sampling params</td><td>Temperature, top_p, max_tokens — experiment in a provider playground (Google AI Studio or Mistral's console), no code needed.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Agent patterns</td><td>Read Anthropic's "Building Effective Agents" in full. Note the five patterns: prompt chaining, routing, parallelization, orchestrator-worker, evaluator-optimizer.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>From memory: define token, context window, system prompt, and summarize the five agent patterns.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic — Building Effective Agents</a> — the single most useful article in this whole roadmap</li>
+            <li><a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI — Prompt Engineering Guide</a></li>
+            <li><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic Docs</a> — find the prompt engineering section under "Build with Claude"</li>
+            <li><a href="https://www.deeplearning.ai/courses/?types=short_course" target="_blank" rel="noopener">DeepLearning.AI short courses</a> — free, look for "ChatGPT Prompt Engineering for Developers"</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 2 -->
+  <article class="phase" id="phase-2">
+    <div class="phase-head">
+      <span class="phase-num">02</span>
+      <h2>API integration &amp; tool calling</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Weeks 4–5</span><span class="pill">14 days</span><span class="pill provider-badge">Providers: Groq → OpenAI</span></div>
+    <p class="phase-why">This is the mechanical core of every agent: giving a model a list of tools and letting it decide when to call them. You've already used this through LangChain — now go one layer down and do it with the raw SDK.</p>
+
+    <details class="week" open>
+      <summary>Week 4 — tool calling, framework-free <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Revisit your code</td><td>Reread your existing <span class="mono">index.ts</span>. Annotate in writing what <span class="mono">createAgent</span>, <span class="mono">tool()</span>, and <span class="mono">streamMode</span> are actually doing now that you understand tokens and roles.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">OpenAI docs</td><td>Read the function-calling docs — same concept as LangChain's <span class="mono">tool()</span>, one layer down.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Anthropic docs</td><td>Read the tool-use docs. Compare the request/response shape to OpenAI's.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Hands-on course</td><td>Work through a function-calling course notebook end to end.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Build, no framework</td><td>New Python script using Groq's SDK (fast responses make this loop pleasant to iterate on), one custom tool (e.g. a calculator). Manually parse the tool-call response.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Extend it</td><td>Add a second tool, plus basic handling for when the model requests a tool that doesn't exist.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Blank file. Rebuild Friday's script from memory.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 5 — structured output, memory, real tools <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Pydantic</td><td>Structured output validation — Python's zod. Should feel immediately familiar. Switch your Friday script over to the OpenAI SDK and confirm the same tool still works with only the client swapped.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">LangChain (Python)</td><td>Read the tool-calling section of the Python docs, compare to the JS version you already used.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Real search tool</td><td>Port your <span class="mono">getLatestInformation</span> stub into the Python script and wire in real Tavily results.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Memory patterns</td><td>Managing a growing message-history array; trimming/summarizing long conversations — a real production concern.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Resilience</td><td>Read a provider's error-code docs, implement basic retry/backoff for rate limits.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Polish</td><td>Clean up the Python CLI chatbot into something you'd be comfortable showing someone.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Phase recap</td><td>Self-test on both weeks: tool-call lifecycle, memory trimming, retry logic — explain each from memory.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank" rel="noopener">OpenAI — Function Calling</a></li>
+            <li><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic Docs</a> — tool use section under "Build with Claude"</li>
+            <li><a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener">Gemini — Function Calling</a></li>
+            <li><a href="https://python.langchain.com/docs/" target="_blank" rel="noopener">LangChain Python Docs</a></li>
+            <li><a href="https://docs.pydantic.dev/" target="_blank" rel="noopener">Pydantic Docs</a></li>
+          </ul>
+        </div>
+        <div class="tool-badges"><span>Tavily (existing key)</span><span>OpenAI / Anthropic / Mistral free tiers</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 3 CHECKPOINT -->
+  <article class="phase" id="phase-3">
+    <div class="phase-head">
+      <span class="phase-num">03</span>
+      <h2>Checkpoint — revision + Project 1</h2>
+    </div>
+    <div class="phase-badges"><span class="pill checkpoint-badge">Week 6</span><span class="pill checkpoint-badge">Full revision week</span><span class="pill provider-badge">Provider: Mistral (same one your current project already uses)</span></div>
+    <p class="phase-why">A whole week, deliberately. Cumulative review locks in Phases 0–2 before RAG adds a new layer on top.</p>
+    <details class="week" open>
+      <summary>Week 6 — revise, then ship <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Revision</td><td>Write your own quiz covering Phases 0–2 (Python basics, tokens/roles, tool calling). Answer it without notes.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Revision</td><td>Grade yourself honestly. Re-read/rebuild whatever you got wrong.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Build</td><td>Start Project 1: Terminal Research Assistant — tool-calling agent + Tavily + memory + streaming, polished.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Build</td><td>Continue.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Build</td><td>Continue.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Ship</td><td>Push to GitHub with a README explaining what it does and how.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Reflect</td><td>Write the resume bullet for this project. Note what was hardest — that's a signal for what to revisit later.</td></tr>
+        </table>
+        <ul class="todo">
+          <li><input type="checkbox" id="p1-1"><label for="p1-1">Project 1 pushed to GitHub with README</label></li>
+          <li><input type="checkbox" id="p1-2"><label for="p1-2">Resume bullet written</label></li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 4 -->
+  <article class="phase" id="phase-4">
+    <div class="phase-head">
+      <span class="phase-num">04</span>
+      <h2>RAG &amp; vector databases</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Weeks 7–9</span><span class="pill">21 days</span><span class="pill provider-badge">Providers: OpenAI (embeddings) + Anthropic (generation &amp; eval)</span></div>
+    <p class="phase-why">Retrieval-Augmented Generation is how you teach a model to answer from documents it never trained on. This is the single most commonly requested AI-engineering skill in real job postings.</p>
+
+    <details class="week" open>
+      <summary>Week 7 — embeddings &amp; a local vector store <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Embeddings</td><td>What an embedding is, conceptually. Read a provider's embeddings-concepts doc.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Generate one</td><td>Call an embeddings endpoint on sample text, inspect the resulting vector.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Vector search</td><td>What a vector database does and why (similarity/cosine distance) — conceptual, no code yet.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Chroma</td><td>Set up Chroma locally — free, no signup, best tool for learning the mechanics.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Chunking</td><td>Why documents get split before embedding; chunk size/overlap tradeoffs.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Embed and store a small set of your own documents in Chroma.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain, from memory, why chunking matters and what a vector similarity search actually returns.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 8 — the full RAG loop <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Retrieval</td><td>Write a similarity-search query against your Chroma store.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Full loop</td><td>Wire together retrieve → stuff into prompt → generate an answer.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Guided build</td><td>Work through a RAG tutorial hands-on, compare its structure to what you built Tuesday.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Cloud vector DB</td><td>Migrate your store to Qdrant Cloud's free tier (best free cloud option available).</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Hybrid search</td><td>Read about hybrid search and metadata filtering — when pure vector search isn't enough.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Add source-citation formatting to your bot's answers.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Diagram the full RAG request lifecycle from memory, end to end.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 9 — evaluation &amp; agentic RAG <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Guided course</td><td>Work through an advanced-RAG-retrieval course module hands-on.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Failure modes</td><td>Read about irrelevant chunks, lost-in-the-middle, and hallucinated citations.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Evaluate</td><td>Write a small set of Q&amp;A test pairs and manually score your bot's accuracy. For a couple of them, also ask Claude (Anthropic) to judge the answer's quality — your first taste of LLM-as-judge, and a second provider's opinion on the same output.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Agentic RAG</td><td>Let the agent decide when to search vs. answer directly — ties Phase 2's tool calling into RAG.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Polish</td><td>Improve whatever your Wednesday eval exposed as weak.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Buffer</td><td>Catch-up day — nothing new, just close gaps from the last three weeks.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Phase recap</td><td>Full Phase 4 self-test: embeddings, chunking, retrieval, evaluation, agentic RAG.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://python.langchain.com/docs/tutorials/rag/" target="_blank" rel="noopener">LangChain — RAG Tutorial</a></li>
+            <li><a href="https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/" target="_blank" rel="noopener">DeepLearning.AI — LangChain: Chat with Your Data</a></li>
+            <li><a href="https://docs.trychroma.com/" target="_blank" rel="noopener">Chroma Docs</a></li>
+            <li><a href="https://qdrant.tech/documentation/" target="_blank" rel="noopener">Qdrant Docs</a></li>
+            <li><a href="https://www.deeplearning.ai/courses/?types=short_course" target="_blank" rel="noopener">DeepLearning.AI short courses</a> — search for "Advanced RAG" and "agentic RAG" titles</li>
+          </ul>
+        </div>
+        <div class="tool-badges"><span>Chroma (local)</span><span>Qdrant Cloud free tier</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 5 -->
+  <article class="phase" id="phase-5">
+    <div class="phase-head">
+      <span class="phase-num">05</span>
+      <h2>AI gateways, observability &amp; cost control</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Week 10</span><span class="pill">7 days</span><span class="pill provider-badge">Providers: all of them, on purpose — that's the point of a gateway</span></div>
+    <p class="phase-why">The production plumbing that sits around raw API calls in any real deployment: one interface across providers, visibility into what's actually happening, and a lid on spend.</p>
+
+    <details class="week" open>
+      <summary>Week 10 — gateway, tracing, caching <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">What's a gateway</td><td>Read why teams put a proxy in front of LLM providers — single interface, budgets, fallback routing.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">LiteLLM</td><td>Self-host the LiteLLM proxy locally; route one request through it to Cerebras and Groq, and compare raw response speed — this is where the free-tier throughput numbers you've read about become visible first-hand.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Observability</td><td>Set up Langfuse's free Hobby tier; pipe your Phase 4 RAG bot's calls through it.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Caching</td><td>Read about prompt caching and semantic caching, and why they cut cost meaningfully.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Alternative</td><td>Read OpenRouter's docs as an all-in-one alternative; compare the three approaches you've now seen.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Wire basic cost/token logging into your existing RAG bot.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain the difference between a gateway and an observability tool, from memory — they're not the same thing.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://docs.litellm.ai/" target="_blank" rel="noopener">LiteLLM Docs</a></li>
+            <li><a href="https://langfuse.com/docs" target="_blank" rel="noopener">Langfuse Docs</a></li>
+            <li><a href="https://openrouter.ai/docs" target="_blank" rel="noopener">OpenRouter Docs</a></li>
+          </ul>
+        </div>
+        <div class="tool-badges"><span>LiteLLM (self-hosted, free)</span><span>Langfuse free tier</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 6 CHECKPOINT -->
+  <article class="phase" id="phase-6">
+    <div class="phase-head">
+      <span class="phase-num">06</span>
+      <h2>Checkpoint — revision + Project 2</h2>
+    </div>
+    <div class="phase-badges"><span class="pill checkpoint-badge">Week 11</span><span class="pill checkpoint-badge">Full revision week</span></div>
+    <p class="phase-why">Same rhythm as Phase 3: consolidate before multi-agent systems add a whole new axis of complexity.</p>
+    <details class="week" open>
+      <summary>Week 11 — revise, then ship <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Revision</td><td>Cumulative self-quiz, Phases 0–5. Include Phase 0–2 questions — this is where forgetting starts to show.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Revision</td><td>Close whatever gaps the quiz found.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Build</td><td>Start Project 2: Docs Q&amp;A Bot — your Phase 4 RAG bot, routed through LiteLLM, traced in Langfuse.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Build</td><td>Continue.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Build</td><td>Continue.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Ship</td><td>Push to GitHub with a README, including a screenshot of the Langfuse trace.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Reflect</td><td>Resume bullet for Project 2.</td></tr>
+        </table>
+        <ul class="todo">
+          <li><input type="checkbox" id="p2-1"><label for="p2-1">Project 2 pushed to GitHub with README</label></li>
+          <li><input type="checkbox" id="p2-2"><label for="p2-2">Resume bullet written</label></li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 7 -->
+  <article class="phase" id="phase-7">
+    <div class="phase-head">
+      <span class="phase-num">07</span>
+      <h2>Multi-agent systems</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Weeks 12–14</span><span class="pill">21 days</span><span class="pill provider-badge">Provider: OpenRouter (swap models per agent role)</span></div>
+    <p class="phase-why">One agent with tools only gets you so far. This phase is about task decomposition across specialized agents — using LangGraph's explicit graph model and CrewAI's role-based model, so you can feel the tradeoff yourself instead of taking someone's word for it.</p>
+
+    <details class="week" open>
+      <summary>Week 12 — LangGraph fundamentals <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Why multi-agent</td><td>Read a framework-comparison article for the mental models, before touching code.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Core concepts</td><td>LangGraph: graphs, nodes, edges, state.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Hands-on</td><td>Build a minimal 2-node graph from the docs.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Guided course</td><td>Start "AI Agents in LangGraph."</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Guided course</td><td>Continue.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Build</td><td>Convert your Phase 2 tool-calling agent into a LangGraph agent.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Sketch a graph (nodes/edges/state) for a workflow you haven't built yet, from memory.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 13 — routing, human-in-the-loop, CrewAI <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Guided course</td><td>Finish "AI Agents in LangGraph."</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Routing</td><td>Conditional edges — how a graph decides which node runs next.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Human-in-the-loop</td><td>Approval steps and interrupts — pausing an agent for a human decision.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">CrewAI</td><td>Role-based agent teams. Compare the mental model directly to LangGraph's graph model.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Build</td><td>A 3-agent CrewAI crew — researcher → writer → editor — on a simple content task. Route it through OpenRouter and give each role a different free model, so you can feel where a weaker model breaks the pipeline.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Polish</td><td>Buffer/polish day for the crew.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain, from memory, when you'd reach for CrewAI vs. LangGraph on a real task.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 14 — state, guardrails, and Project 3 <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">State &amp; memory</td><td>How state and memory carry across a multi-agent run.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Guardrails</td><td>Agent loops that don't terminate — a real failure mode. Read about guardrails and step limits.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Evaluation</td><td>How to judge multi-agent output quality, not just single-turn accuracy.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Build — Project 3</td><td>Rebuild the researcher → writer → editor pipeline in LangGraph.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Build — Project 3</td><td>Finish and polish; push to GitHub with a README comparing your CrewAI and LangGraph versions.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Buffer</td><td>Catch-up day.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Phase recap</td><td>Explain LangGraph vs. CrewAI vs. AutoGen mental models from memory, unprompted.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph Docs</a></li>
+            <li><a href="https://www.deeplearning.ai/courses/ai-agents-in-langgraph/" target="_blank" rel="noopener">DeepLearning.AI — AI Agents in LangGraph</a> (taught by LangChain's and Tavily's founders)</li>
+            <li><a href="https://docs.crewai.com/" target="_blank" rel="noopener">CrewAI Docs</a></li>
+            <li><a href="https://www.datacamp.com/tutorial/crewai-vs-langgraph-vs-autogen" target="_blank" rel="noopener">DataCamp — CrewAI vs. LangGraph vs. AutoGen</a></li>
+            <li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener">Anthropic — Writing Tools for Agents</a> — revisit with multi-agent context</li>
+          </ul>
+        </div>
+        <ul class="todo">
+          <li><input type="checkbox" id="p3-1"><label for="p3-1">Project 3 pushed to GitHub with README</label></li>
+          <li><input type="checkbox" id="p3-2"><label for="p3-2">Resume bullet written</label></li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 8 -->
+  <article class="phase" id="phase-8">
+    <div class="phase-head">
+      <span class="phase-num">08</span>
+      <h2>Fine-tuning via APIs</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Week 15</span><span class="pill">7 days</span><span class="pill">~$2–5 real cost</span><span class="pill provider-badge">Providers: OpenAI or Mistral (both offer accessible hosted fine-tuning)</span></div>
+    <p class="phase-why">Knowing when <em>not</em> to fine-tune is more valuable than knowing how. This phase is deliberately short: hosted fine-tuning APIs only, no training infrastructure, one small paid job so you feel the real cost and process once.</p>
+
+    <details class="week" open>
+      <summary>Week 15 — when, and how, hosted <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Decision framework</td><td>Fine-tuning vs. prompting vs. RAG — read a provider's guide on when each is the right call.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Prepare data</td><td>Read the fine-tuning docs; prepare a tiny JSONL training set of your own examples.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Run a job</td><td>Fine-tune a small, cheap model. Budget a few dollars — this is the one step in the whole roadmap that isn't free.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Evaluate</td><td>Compare the fine-tuned model against the base model on your test examples.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Concepts</td><td>Read (don't implement) LoRA/PEFT at a conceptual level — how hosted APIs make fine-tuning cheap under the hood.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Write it up</td><td>Write down when you'd actually reach for fine-tuning on a real project vs. when RAG/prompting is enough.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Explain your Saturday write-up out loud, unaided.</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://platform.openai.com/docs/guides/fine-tuning" target="_blank" rel="noopener">OpenAI — Fine-tuning Guide</a></li>
+            <li><a href="https://docs.mistral.ai/" target="_blank" rel="noopener">Mistral Docs</a> — find the fine-tuning/customization section</li>
+            <li><a href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener">Gemini API Docs</a> — find the model-tuning section</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 9 -->
+  <article class="phase" id="phase-9">
+    <div class="phase-head">
+      <span class="phase-num">09</span>
+      <h2>Build your own agent harness</h2>
+    </div>
+    <div class="phase-badges"><span class="pill">Weeks 16–17</span><span class="pill">14 days</span><span class="pill provider-badge">Provider: Anthropic Claude, built to swap out</span></div>
+    <p class="phase-why">The capstone skill. Tools like Claude Code are, at the core, a while-loop: read input, send it to a model with tool definitions, execute what it asks for, feed the result back. Build a minimal version yourself, with no framework, so nothing about how these tools work is a mystery anymore.</p>
+
+    <details class="week" open>
+      <summary>Week 16 — the bare loop <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Read</td><td>Read a from-scratch agent-loop walkthrough in full — understand every line before writing any of your own.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Read</td><td>Read a second article on harness architecture (the loop, and how tools plug into it).</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Build</td><td>Start the bare loop: read user input, send to the model with tool definitions, no framework.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Tool 1</td><td>Add a "read a file from disk" tool.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Tool 2</td><td>Add a "write/edit a file" tool.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Tool 3</td><td>Add a "run a shell command" tool — with a confirmation prompt before executing. Build that habit in from day one.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Recap</td><td>Walk through your own loop out loud, explaining what happens on every iteration.</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="week">
+      <summary>Week 17 — memory, permissions, streaming <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Read</td><td>Read a full end-to-end coding-agent tutorial for architecture ideas.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Memory &amp; persona</td><td>Add conversation memory and a system prompt that gives the agent constraints and a personality.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Permissions</td><td>Add a basic approval layer before destructive actions — mirrors how real coding agents work.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Streaming</td><td>Stream model output to the terminal token by token instead of waiting for the full response.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Real test</td><td>Point it at a real small task end to end — e.g. "add a function to this file."</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Portability check</td><td>Swap the model provider (e.g. Claude → Gemini or Groq) behind your harness without touching the tool-loop logic. If it's not a small change, that's telling you your tool-definition layer is too tightly coupled to one SDK — fix that coupling, then write the README.</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Phase recap</td><td>Compare your harness to how you now understand Claude Code works. What's missing, and why does that missing piece matter?</td></tr>
+        </table>
+        <div class="resources">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="https://www.aibuilderclub.com/blog/how-to-build-ai-agent-from-scratch" target="_blank" rel="noopener">AI Builder Club — Build an AI Agent from Scratch</a> (~60-line loop, Anthropic SDK)</li>
+            <li><a href="https://dev.to/uditrajput/building-an-agent-harness-from-scratch-the-loop-and-tools-31di" target="_blank" rel="noopener">Building an Agent Harness from Scratch: The Loop and the Tools</a></li>
+            <li><a href="https://www.siddharthbharath.com/build-a-coding-agent-python-tutorial/" target="_blank" rel="noopener">Sid Bharath — Build a Coding Agent from Scratch</a> (full Python tutorial)</li>
+            <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic — Building Effective Agents</a> — revisit once more with this context</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </article>
+
+  <!-- PHASE 10 -->
+  <article class="phase" id="phase-10">
+    <div class="phase-head">
+      <span class="phase-num">10</span>
+      <h2>Capstone, portfolio &amp; final revision</h2>
+    </div>
+    <div class="phase-badges"><span class="pill checkpoint-badge">Week 18</span><span class="pill checkpoint-badge">Full-course revision</span></div>
+    <p class="phase-why">Turn the harness from Phase 9 into one demo-able product, and turn eighteen weeks of work into something a resume and a GitHub profile can actually show.</p>
+
+    <details class="week" open>
+      <summary>Week 18 — the last mile <span class="arrow">›</span></summary>
+      <div class="week-body">
+        <table class="days">
+          <tr><th>Day</th><th>Focus</th><th>Task</th></tr>
+          <tr><td class="day">Mon</td><td class="focus">Full revision</td><td>Cumulative self-quiz across all ten prior phases. Where you're rusty, redo one exercise from that phase from memory.</td></tr>
+          <tr><td class="day">Tue</td><td class="focus">Full revision</td><td>Close remaining gaps.</td></tr>
+          <tr><td class="day">Wed</td><td class="focus">Capstone</td><td>Pick one real use case for your harness — e.g. "manages a notes folder" or "writes git commit messages" — so it's demo-able, not generic.</td></tr>
+          <tr><td class="day">Thu</td><td class="focus">Capstone</td><td>Build it out around that use case.</td></tr>
+          <tr><td class="day">Fri</td><td class="focus">Capstone</td><td>Polish, test, fix rough edges.</td></tr>
+          <tr><td class="day">Sat</td><td class="focus">Ship</td><td>Push to GitHub with a full README and a simple architecture write-up (a text diagram is fine).</td></tr>
+          <tr class="recap"><td class="day">Sun</td><td class="focus">Portfolio</td><td>Write resume bullets for all four projects and a short profile blurb for GitHub/LinkedIn.</td></tr>
+        </table>
+        <ul class="todo">
+          <li><input type="checkbox" id="cap-1"><label for="cap-1">Capstone pushed to GitHub with README + architecture write-up</label></li>
+          <li><input type="checkbox" id="cap-2"><label for="cap-2">All 4 resume bullets written</label></li>
+          <li><input type="checkbox" id="cap-3"><label for="cap-3">GitHub/LinkedIn profile blurb written</label></li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <footer>
+    Built as a reference for the <span class="mono">agentic-ai</span> project. I'll keep guiding phase by phase — explaining, pointing, reviewing — and only touch code in that repo when you ask me to, explicitly and specifically.
+  </footer>
+
+</div>
