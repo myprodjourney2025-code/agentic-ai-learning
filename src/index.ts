@@ -7,8 +7,10 @@ import {
   SystemMessage,
   tool,
   createAgent,
+  AIMessageChunk,
 } from "langchain";
 import * as z from "zod";
+import { tavily } from "@tavily/core";
 
 config();
 
@@ -18,6 +20,16 @@ if (!apiKey) {
     "MISTRAL_API_KEY is not defined in the environment variables.",
   );
 }
+
+const tavilyApiKey = process.env.TAVILY_API_KEY;
+if (!tavilyApiKey) {
+  throw new Error(
+    "TAVILY_API_KEY is not defined in the environment variables.",
+  );
+}
+
+const tavilyClient = tavily({ apiKey: tavilyApiKey });
+
 const model = new ChatMistralAI({
   model: "mistral-small-latest",
   apiKey: apiKey,
@@ -46,14 +58,17 @@ const model = new ChatMistralAI({
 //   process.stdout.write("\n");
 // }
 
-function getLatestInformation({ query }: { query: string }): string {
-  return `Latest information about "${query} is:
-  1. India plans a phased ban on imports of 405 defence items to strengthen domestic manufacturing.
-  2. Omar Abdullah meets a US envoy in Jammu and Kashmir, saying the envoy came to listen to local concerns.
-  3. Husband and mother-in-law charged over the death of an Indian bride.
-  4. Women-led protests in India continue to demand political and social change.
-  5. Student and school-related protests against the Modi government gain attention.
-   "`;
+async function getLatestInformation({
+  query,
+}: {
+  query: string;
+}): Promise<string> {
+  const response = await tavilyClient.search(query);
+  const latestInfo = response.results
+    .map((result) => result.content)
+    .join("\n\n");
+
+  return latestInfo;
 }
 
 const getLatestInfoTool = tool(getLatestInformation, {
@@ -65,7 +80,6 @@ const getLatestInfoTool = tool(getLatestInformation, {
       .describe("The topic or query to get the latest information about."),
   }),
 });
-
 const agent = createAgent({
   name: "InfoBot",
   model,
@@ -94,8 +108,10 @@ while (true) {
   let aiResponse = "";
 
   for await (const [chunk] of stream) {
-    process.stdout.write(chunk.text);
-    aiResponse += chunk.text;
+    if (chunk instanceof AIMessageChunk) {
+      process.stdout.write(chunk.text);
+      aiResponse += chunk.text;
+    }
   }
 
   messageHistory.push(new AIMessage(aiResponse));
