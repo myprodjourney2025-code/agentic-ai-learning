@@ -27,3 +27,10 @@ print("The words in the list are : ")
 
 for word in words:
     print(word+" ")
+
+
+def sum(a, b):
+    return a + b
+
+print(f"The sum of the numbers is : {sum(4, 5)}")
+
